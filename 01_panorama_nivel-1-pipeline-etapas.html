@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nível 1 — Panorama das Etapas</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --card2:#1d2029; --line:#2a2e3a;
+    --tx:#e7e9ee; --mut:#9aa3b2; --acc:#5e9bff;
+    --bronze:#b87333; --silver:#9fb3c8; --gold:#e3b341;
+    --n1:#3ba776; --ok:#3ba776; --warn:#e3b341;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:linear-gradient(180deg,#0c0e12,#0f1115);
+    color:var(--tx); font:16px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    padding:0 0 80px;
+  }
+  header{
+    padding:56px 24px 40px; text-align:center;
+    border-bottom:1px solid var(--line);
+    background:radial-gradient(1200px 400px at 50% -100px,rgba(59,167,118,.15),transparent);
+  }
+  header .kicker{color:var(--n1); font-weight:700; letter-spacing:1px; font-size:13px; text-transform:uppercase}
+  header h1{margin:8px 0 10px; font-size:30px; letter-spacing:-.5px}
+  header p{margin:0 auto; max-width:700px; color:var(--mut)}
+  .wrap{max-width:960px; margin:0 auto; padding:0 24px}
+
+  .goal{
+    margin:32px auto; padding:16px 22px; background:var(--card);
+    border:1px solid var(--line); border-radius:12px; display:flex; gap:12px; align-items:center;
+    flex-wrap:wrap; justify-content:center; color:var(--mut); font-size:14px;
+  }
+  .goal b{color:var(--tx)} .arrow{color:var(--n1); font-weight:700}
+
+  h3.sec{margin:44px 0 14px; font-size:16px; color:var(--tx); border-left:3px solid var(--n1); padding-left:12px; text-transform:uppercase; letter-spacing:.5px}
+
+  .step{
+    margin:16px 0; background:var(--card); border:1px solid var(--line);
+    border-radius:16px; overflow:hidden;
+  }
+  .step-head{padding:18px 24px; display:flex; align-items:center; gap:16px; border-bottom:1px solid var(--line)}
+  .num{
+    width:42px; height:42px; border-radius:11px; display:grid; place-items:center;
+    font-size:19px; font-weight:800; flex:none;
+    background:rgba(59,167,118,.15); color:var(--n1); border:1px solid rgba(59,167,118,.4);
+  }
+  .step-head h2{margin:0; font-size:18px}
+  .step-head .sub{margin:2px 0 0; color:var(--mut); font-size:13.5px}
+  .tag{margin-left:auto; font-size:12px; padding:5px 11px; border-radius:20px; border:1px solid var(--line); color:var(--mut); flex:none}
+  .body{padding:20px 24px}
+  .body p{margin:0 0 14px}
+  .lbl{color:var(--mut); font-size:12px; text-transform:uppercase; letter-spacing:.5px; margin:18px 0 6px; font-weight:600}
+  ul{margin:6px 0 0; padding-left:20px} li{margin:6px 0}
+  code{background:var(--card2); padding:2px 6px; border-radius:5px; font-size:13px; color:#8fd6b0}
+  .done{background:var(--card2); border-left:3px solid var(--ok); padding:12px 16px; border-radius:0 10px 10px 0; font-size:14px; color:#cfe6da; margin-top:16px}
+  .done b{color:var(--tx)}
+  .warn{margin-top:14px; padding:12px 16px; background:rgba(227,179,65,.08); border:1px solid rgba(227,179,65,.3); border-radius:10px; color:#e8d9a8; font-size:13.5px}
+  .flow-badges{display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 0}
+  .chip{font-size:12px; padding:5px 12px; border-radius:8px; border:1px solid var(--line); background:var(--card2)}
+  .chip.b{color:var(--bronze)} .chip.s{color:var(--silver)} .chip.g{color:var(--gold)}
+
+  .diagram{margin:24px 0; padding:20px; background:#0c0e12; border:1px solid var(--line); border-radius:12px; overflow-x:auto}
+  .diagram pre{margin:0; color:#8fa6c9; font:13px/1.5 "SF Mono",Consolas,monospace; white-space:pre}
+
+  .prof{background:var(--card); border:1px solid rgba(59,167,118,.35); border-radius:16px; padding:22px 26px; margin:16px 0}
+  .prof p{margin:0 0 10px} .prof p:last-child{margin:0}
+  footer{text-align:center; color:var(--mut); font-size:13px; margin-top:50px}
+</style>
+</head>
+<body>
+<header>
+  <span class="kicker">🥉 Nível 1 · Base</span>
+  <h1>Panorama das Etapas — Nível 1</h1>
+  <p>Do que você já tem (ETL em pandas rodando local) até o ciclo completo na nuvem: extração → Bronze/Silver/Gold no Supabase → agendamento no GitHub Actions → dashboard em Streamlit. Sete etapas, na ordem em que você deve executá-las.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="goal">
+    <span><b>Excel</b></span><span class="arrow">→</span>
+    <span><b>Python/pandas</b></span><span class="arrow">→</span>
+    <span><b>Supabase</b> (Bronze·Silver·Gold)</span><span class="arrow">→</span>
+    <span><b>GitHub Actions</b> (cron)</span><span class="arrow">→</span>
+    <span><b>Streamlit</b></span>
+  </div>
+
+  <div class="prof">
+    <p><b>Como vamos trabalhar.</b> Sou seu professor nesse projeto. A regra do Nível 1 é uma só: <b>fechar o ciclo ponta a ponta o mais rápido possível</b>, mesmo que tosco. Nada de otimizar antes de estar rodando. Fazemos uma etapa, provamos que funciona (o "critério de pronto" de cada card), e só então avançamos.</p>
+    <p>Você já tem o mais difícil: um ETL que separa Bronze/Silver/Gold e carrega no Postgres. As etapas 1–3 são para rodar isso de forma confiável na sua máquina; 4–5 colocam na nuvem e agendam; 6–7 entregam o dashboard e revisam o ciclo.</p>
+  </div>
+
+  <div class="diagram">
+<pre>  ETAPA 1        ETAPA 2·3         ETAPA 4          ETAPA 5           ETAPA 6
+┌─────────┐   ┌────────────┐   ┌──────────┐   ┌──────────────┐   ┌────────────┐
+│ Rodar   │──►│ Supabase   │──►│ Repo Git │──►│ GitHub       │──►│ Streamlit  │
+│ o ETL   │   │ + schemas  │   │ + secrets│   │ Actions cron │   │ lê o Gold  │
+│ local   │   │ B/S/G      │   │          │   │ (deploy)     │   │            │
+└─────────┘   └────────────┘   └──────────┘   └──────────────┘   └────────────┘
+                                                                   ETAPA 7 = revisão do ciclo</pre>
+  </div>
+
+  <h3 class="sec">As 7 etapas do Nível 1</h3>
+
+  <!-- 1 -->
+  <div class="step">
+    <div class="step-head"><div class="num">1</div>
+      <div><h2>Rodar o ETL local sem erro</h2><p class="sub">Provar que <code>etl_estoque.py</code> extrai, transforma e gera Bronze/Silver/Gold.</p></div>
+      <span class="tag">✅ Concluído</span>
+    </div>
+    <div class="body">
+      <p>Antes de qualquer nuvem, o pipeline precisa rodar limpo na sua máquina. Aqui você monta o ambiente e corrige o que impede a execução.</p>
+      <div class="lbl">O que fazer</div>
+      <ul>
+        <li>Criar um <b>ambiente virtual</b> (<code>python -m venv .venv</code>) e instalar dependências: <code>pandas</code>, <code>openpyxl</code>, <code>sqlalchemy</code>, <code>psycopg2-binary</code>, <code>python-dotenv</code>.</li>
+        <li>Congelar em <code>requirements.txt</code> (<code>pip freeze &gt; requirements.txt</code>) — o GitHub Actions vai precisar disso na Etapa 5.</li>
+        <li><b>Corrigir o caminho dos dados.</b> Hoje o script usa <code>os.path.join(dirname, "..", "data")</code>, que sobe uma pasta. Como o script está na raiz junto de <code>data/</code>, isso aponta para o lugar errado. Ajuste para <code>os.path.join(dirname, "data")</code> (ou mova o script para uma subpasta <code>src/</code>).</li>
+        <li>Nesta etapa, teste só <code>extract()</code> e <code>transform()</code> — comente a chamada a <code>load()</code> e dê <code>print</code> nos DataFrames.</li>
+      </ul>
+      <div class="warn">⚠️ Ainda não conecte no banco. Primeiro garanta que os dados saem corretos do <code>transform()</code>: confira as datas, a padronização de loja (<code>L0…</code>) e o Gold agregado por loja+categoria.</div>
+      <div class="done"><b>Critério de pronto:</b> <code>print</code> mostra as 3 tabelas (bronze, silver, gold) com linhas coerentes e sem exceção.</div>
+      <div class="lbl">O que aconteceu na prática</div>
+      <ul>
+        <li>Ambiente ativado no PowerShell com <code>.venv\Scripts\Activate.ps1</code> (prompt do Antigravity é PowerShell, não bash/cmd).</li>
+        <li>Caminho corrigido para <code>os.path.join(os.path.dirname(__file__), "data")</code>, conforme previsto.</li>
+        <li><code>load()</code> comentada em <code>run()</code> e adicionados <code>print(bronze.head())</code>, <code>print(silver.head())</code>, <code>print(gold.head())</code> antes do print final de <code>OK</code>.</li>
+        <li><b>Bug real encontrado na 1ª rodada:</b> <code>pd.to_datetime(s["data"], format="mixed", dayfirst=True)</code> trocava dia/mês também nas datas já em ISO (<code>2026-06-01</code> virava 6 de janeiro em vez de 1º de junho). Corrigido separando as linhas por formato (contém <code>-</code> = ISO, parseado sem <code>dayfirst</code>; senão = BR, parseado com <code>dayfirst=True</code>) e recombinando com <code>pd.concat(...).sort_index()</code>.</li>
+        <li><b>Segundo bug:</b> a regra <code>"LOJA " → "L0"</code> só cobria o formato por extenso; códigos já abreviados como <code>L02</code> não batiam com <code>L002</code>/<code>L01</code>/<code>L001</code> e viravam lojas "diferentes" no Gold. Corrigido extraindo os dígitos por regex (<code>str.extract(r"(\d+)")</code>) e remontando sempre com 3 dígitos (<code>"L" + numero.zfill(3)</code>).</li>
+        <li>Importante: os Excel de origem em <code>data/</code> permanecem sujos de propósito (não foram editados) — a limpeza acontece inteiramente dentro de <code>transform()</code>; o Bronze preserva o dado bruto tal como veio.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="step">
+    <div class="step-head"><div class="num">2</div>
+      <div><h2>Criar o projeto no Supabase</h2><p class="sub">Seu Postgres gerenciado na nuvem — de graça para começar.</p></div>
+      <span class="tag">✅ Concluído</span>
+    </div>
+    <div class="body">
+      <p>O Supabase é um Postgres hospedado. É onde Bronze, Silver e Gold vão viver. Você só precisa do banco — ignore Auth, Storage e o resto por enquanto.</p>
+      <div class="lbl">O que fazer</div>
+      <ul>
+        <li>Criar conta e um <b>novo projeto</b>; guardar a senha do banco.</li>
+        <li>Pegar a <b>connection string</b> (Project Settings → Database → Connection string, formato <code>URI</code>). É a variável <code>SUPABASE_URL</code> que o script já espera em <code>os.environ["SUPABASE_URL"]</code>.</li>
+        <li>Testar a conexão localmente com um script curto ou <code>psql</code>.</li>
+      </ul>
+      <div class="warn">⚠️ A connection string tem senha. Ela vai num <code>.env</code> <b>que nunca entra no Git</b> (Etapa 4). Nunca cole isso direto no código.</div>
+      <div class="done"><b>Critério de pronto:</b> você consegue conectar ao banco de fora e listar (ainda vazio) sem erro de autenticação/SSL.</div>
+      <div class="lbl">O que aconteceu na prática</div>
+      <ul>
+        <li>Projeto criado no Supabase e <code>SUPABASE_URL</code> salva em <code>.env</code> na raiz do projeto (mesma pasta do <code>etl_estoque.py</code>), formato <code>postgresql://postgres:senha@db.xxxx.supabase.co:5432/postgres</code>.</li>
+        <li>Conexão testada sem script separado — um one-liner direto no terminal:
+          <br><code>python -c "from dotenv import load_dotenv; import os; from sqlalchemy import create_engine, text; load_dotenv(); engine = create_engine(os.environ['SUPABASE_URL']); conn = engine.connect(); print(conn.execute(text('SELECT version()')).fetchone()); conn.close()"</code>
+        </li>
+        <li>Retornou <code>PostgreSQL 17.6 on x86_64-pc-linux-gnu...</code> — conexão confirmada.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="step">
+    <div class="step-head"><div class="num">3</div>
+      <div><h2>Criar os schemas Bronze / Silver / Gold e carregar</h2><p class="sub">A arquitetura Medalhão dentro do Postgres.</p></div>
+      <span class="tag">✅ Concluído</span>
+    </div>
+    <div class="body">
+      <p>O <code>load()</code> escreve em <code>dw_bronze</code>, <code>dw_silver</code> e <code>dw_gold</code>. Esses schemas precisam existir, e a tabela <code>dw_gold.posicao_estoque</code> precisa existir (o código faz <code>truncate</code> nela antes do <code>append</code>).</p>
+      <div class="lbl">O que fazer</div>
+      <ul>
+        <li>No SQL Editor do Supabase: <code>create schema dw_bronze; create schema dw_silver; create schema dw_gold;</code></li>
+        <li>Criar a tabela <code>dw_gold.posicao_estoque</code> com as colunas do Gold (<code>cod_loja, categoria, qtd_entradas, qtd_saidas, saldo, valor_saldo</code>).</li>
+        <li>Reativar o <code>load()</code> e rodar o <code>run()</code> completo.</li>
+        <li>Conferir no Supabase: as 3 tabelas populadas.</li>
+      </ul>
+      <div class="flow-badges">
+        <span class="chip b">● Bronze — cópia fiel do bruto</span>
+        <span class="chip s">● Silver — limpo e enriquecido</span>
+        <span class="chip g">● Gold — KPI por loja+categoria</span>
+      </div>
+      <div class="done"><b>Critério de pronto:</b> <code>python etl_estoque.py</code> imprime <code>OK - bronze=… silver=… gold=…</code> e as tabelas aparecem no Supabase.</div>
+      <div class="lbl">O que aconteceu na prática</div>
+      <ul>
+        <li>Schemas criados com <code>create schema if not exists dw_bronze/dw_silver/dw_gold;</code>.</li>
+        <li>Tabela <code>dw_gold.posicao_estoque</code> criada manualmente com <code>create table if not exists</code> e colunas <code>cod_loja text, categoria text, qtd_entradas numeric, qtd_saidas numeric, saldo numeric, valor_saldo numeric</code>.</li>
+        <li>Os prints de debug da Etapa 1 (<code>bronze.head()</code>, <code>silver.head()</code>, <code>gold.head()</code>) foram removidos e a chamada a <code>load()</code> reativada em <code>run()</code>.</li>
+        <li><code>python etl_estoque.py</code> imprimiu <code>OK - bronze=... silver=... gold=...</code> e as 3 tabelas apareceram populadas no Table Editor do Supabase.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="step">
+    <div class="step-head"><div class="num">4</div>
+      <div><h2>Versionar no GitHub (com segredos fora)</h2><p class="sub">Repo limpo, <code>.gitignore</code> e <code>.env.example</code>.</p></div>
+      <span class="tag">~45min</span>
+    </div>
+    <div class="body">
+      <p>Para agendar na nuvem, o código precisa estar no GitHub. O ponto crítico aqui é <b>não vazar a connection string</b>.</p>
+      <div class="lbl">O que fazer</div>
+      <ul>
+        <li><code>git init</code>, criar <code>.gitignore</code> incluindo <code>.venv/</code>, <code>.env</code>, <code>__pycache__/</code>.</li>
+        <li>Criar um <code>.env.example</code> (sem a senha real) documentando <code>SUPABASE_URL=</code>.</li>
+        <li>Commit e push para um repositório novo no GitHub.</li>
+        <li>Conferir no GitHub que <b>o <code>.env</code> não subiu</b>.</li>
+      </ul>
+      <div class="done"><b>Critério de pronto:</b> repo online, com <code>etl_estoque.py</code>, <code>requirements.txt</code>, <code>data/</code> e <code>.env.example</code> — e sem nenhum segredo.</div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="step">
+    <div class="step-head"><div class="num">5</div>
+      <div><h2>Agendar com GitHub Actions (cron)</h2><p class="sub">O "orquestrador" do Nível 1 — sem Airflow, sem Dagster.</p></div>
+      <span class="tag">~1–2h</span>
+    </div>
+    <div class="body">
+      <p>Aqui está o coração do aprendizado de <b>deploy</b> deste nível: um workflow que instala as deps e roda o ETL num horário fixo, na infraestrutura do GitHub.</p>
+      <div class="lbl">O que fazer</div>
+      <ul>
+        <li>Criar <code>.github/workflows/etl.yml</code> com gatilho <code>schedule: cron</code> + <code>workflow_dispatch</code> (para rodar manualmente no teste).</li>
+        <li>Steps: <code>checkout</code> → <code>setup-python</code> → <code>pip install -r requirements.txt</code> → <code>python etl_estoque.py</code>.</li>
+        <li>Guardar a connection string em <b>Settings → Secrets and variables → Actions</b> como <code>SUPABASE_URL</code>, e injetar via <code>env:</code> no step.</li>
+        <li>Disparar manualmente pela aba <b>Actions</b> e ler os logs.</li>
+      </ul>
+      <div class="warn">⚠️ Lembrete: cron do GitHub Actions roda em <b>UTC</b>. Ajuste o horário considerando seu fuso (-03).</div>
+      <div class="done"><b>Critério de pronto:</b> execução manual verde na aba Actions e os dados atualizados no Supabase.</div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="step">
+    <div class="step-head"><div class="num">6</div>
+      <div><h2>Dashboard em Streamlit sobre o Gold</h2><p class="sub">O consumo final — Python puro, sem front-end.</p></div>
+      <span class="tag">~2h</span>
+    </div>
+    <div class="body">
+      <p>O Streamlit lê <b>apenas o schema Gold</b> (nunca o Silver/Bronze) e mostra os KPIs. Regra de ouro da Medalhão: dashboard consome Gold.</p>
+      <div class="lbl">O que fazer</div>
+      <ul>
+        <li>Criar <code>app.py</code> que conecta no Supabase e faz <code>SELECT * FROM dw_gold.posicao_estoque</code>.</li>
+        <li>Exibir: tabela, saldo por loja, valor de saldo por categoria (um ou dois gráficos <code>st.bar_chart</code>).</li>
+        <li>Rodar local com <code>streamlit run app.py</code>.</li>
+        <li>Publicar no <b>Streamlit Community Cloud</b> (grátis), apontando para o repo e configurando o secret <code>SUPABASE_URL</code>.</li>
+      </ul>
+      <div class="done"><b>Critério de pronto:</b> URL pública do Streamlit mostrando os KPIs vindos do Gold.</div>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="step">
+    <div class="step-head"><div class="num">7</div>
+      <div><h2>Fechar e revisar o ciclo</h2><p class="sub">Provar que tudo se conecta e documentar.</p></div>
+      <span class="tag">~1h</span>
+    </div>
+    <div class="body">
+      <p>O Nível 1 termina quando você consegue disparar o pipeline e ver o dashboard refletir a mudança — sem tocar em nada manualmente entre as pontas.</p>
+      <div class="lbl">O que fazer</div>
+      <ul>
+        <li>Alterar/adicionar uma linha nos Excel de origem, rodar o Actions (ou esperar o cron) e confirmar que o Streamlit muda.</li>
+        <li>Escrever um <code>README.md</code> curto: como rodar local, como o cron funciona, onde estão os segredos.</li>
+        <li>Anotar limitações (ex.: Excel ainda é a fonte, sem testes de dados) — isso vira a lista de entrada do <b>Nível 2</b>.</li>
+      </ul>
+      <div class="done"><b>Critério de pronto (Nível 1 concluído):</b> Excel → Actions → Supabase → Streamlit funcionando de ponta a ponta, na nuvem, com um README.</div>
+    </div>
+  </div>
+
+  <h3 class="sec">O que NÃO fazer no Nível 1</h3>
+  <div class="prof">
+    <p>Não introduza dbt, Dagster, Airflow, Docker ou API de ERP agora — tudo isso é Nível 2/3. Adicionar peças cedo é o erro clássico que trava o aprendizado de deploy.</p>
+    <p>Não tente deixar o ETL "perfeito". Bronze como cópia fiel e Silver com limpeza simples bastam. O objetivo é o <b>ciclo</b>, não a transformação.</p>
+    <p>Quando as 7 etapas estiverem verdes, me chame: montamos juntos o passo a passo detalhado da Etapa 1 (ambiente + correção do caminho) e seguimos card a card.</p>
+  </div>
+
+  <footer>PROJ011 — Airflow Pipeline Test · Panorama do Nível 1 · 2026-07-06</footer>
+
+</div>
+</body>
+</html>
