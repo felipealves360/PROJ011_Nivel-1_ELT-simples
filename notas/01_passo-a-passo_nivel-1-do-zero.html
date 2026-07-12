@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nível 1 — Passo a Passo (do zero)</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --card2:#1d2029; --line:#2a2e3a;
+    --tx:#e7e9ee; --mut:#9aa3b2; --acc:#5e9bff;
+    --bronze:#b87333; --silver:#9fb3c8; --gold:#e3b341;
+    --n1:#3ba776; --ok:#3ba776; --warn:#e3b341; --err:#e06c75;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:linear-gradient(180deg,#0c0e12,#0f1115);
+    color:var(--tx); font:16px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    padding:0 0 80px;
+  }
+  header{
+    padding:56px 24px 40px; text-align:center;
+    border-bottom:1px solid var(--line);
+    background:radial-gradient(1200px 400px at 50% -100px,rgba(59,167,118,.15),transparent);
+  }
+  header .kicker{color:var(--n1); font-weight:700; letter-spacing:1px; font-size:13px; text-transform:uppercase}
+  header h1{margin:8px 0 10px; font-size:30px; letter-spacing:-.5px}
+  header p{margin:0 auto; max-width:720px; color:var(--mut)}
+  .wrap{max-width:960px; margin:0 auto; padding:0 24px}
+
+  h3.sec{margin:52px 0 14px; font-size:16px; color:var(--tx); border-left:3px solid var(--n1); padding-left:12px; text-transform:uppercase; letter-spacing:.5px}
+
+  .step{margin:16px 0; background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden}
+  .step-head{padding:18px 24px; display:flex; align-items:center; gap:16px; border-bottom:1px solid var(--line)}
+  .num{
+    width:42px; height:42px; border-radius:11px; display:grid; place-items:center;
+    font-size:19px; font-weight:800; flex:none;
+    background:rgba(59,167,118,.15); color:var(--n1); border:1px solid rgba(59,167,118,.4);
+  }
+  .step-head h2{margin:0; font-size:18px}
+  .step-head .sub{margin:2px 0 0; color:var(--mut); font-size:13.5px}
+  .tag{margin-left:auto; font-size:12px; padding:5px 11px; border-radius:20px; border:1px solid var(--line); color:var(--mut); flex:none}
+  .body{padding:20px 24px}
+  .body p{margin:0 0 14px}
+  .lbl{color:var(--mut); font-size:12px; text-transform:uppercase; letter-spacing:.5px; margin:22px 0 6px; font-weight:600}
+  .lbl:first-child{margin-top:0}
+  ul,ol{margin:6px 0 0; padding-left:22px} li{margin:7px 0}
+  code{background:var(--card2); padding:2px 6px; border-radius:5px; font-size:13px; color:#8fd6b0; word-break:break-word}
+
+  pre{
+    margin:10px 0 0; padding:14px 16px; background:#0b0d11; border:1px solid var(--line);
+    border-radius:10px; overflow-x:auto; font:13px/1.55 "SF Mono",Consolas,Monaco,monospace; color:#cfd6e4;
+  }
+  pre code{background:none; padding:0; color:inherit; font-size:inherit}
+  pre .c{color:#6b7688}    /* comentario */
+  pre .k{color:#c792ea}    /* keyword */
+  pre .s{color:#8fd6b0}    /* string */
+  pre .f{color:#82aaff}    /* func/chave */
+  .fname{
+    display:inline-block; margin:16px 0 0; padding:4px 10px; font:12px/1.4 "SF Mono",Consolas,monospace;
+    background:var(--card2); border:1px solid var(--line); border-bottom:none; border-radius:8px 8px 0 0; color:var(--mut);
+  }
+  .fname + pre{margin-top:0; border-radius:0 10px 10px 10px}
+
+  .done{background:var(--card2); border-left:3px solid var(--ok); padding:12px 16px; border-radius:0 10px 10px 0; font-size:14px; color:#cfe6da; margin-top:18px}
+  .done b{color:var(--tx)}
+  .warn{margin-top:14px; padding:12px 16px; background:rgba(227,179,65,.08); border:1px solid rgba(227,179,65,.3); border-radius:10px; color:#e8d9a8; font-size:13.5px}
+  .trap{margin-top:14px; padding:12px 16px; background:rgba(224,108,117,.08); border:1px solid rgba(224,108,117,.3); border-radius:10px; color:#f0c2c6; font-size:13.5px}
+  .trap b, .warn b{color:#fff}
+  .warn code, .trap code{background:rgba(0,0,0,.3)}
+
+  .prof{background:var(--card); border:1px solid rgba(59,167,118,.35); border-radius:16px; padding:22px 26px; margin:16px 0}
+  .prof p{margin:0 0 10px} .prof p:last-child{margin:0}
+
+  table{width:100%; border-collapse:collapse; margin-top:12px; font-size:14px}
+  th,td{border:1px solid var(--line); padding:9px 12px; text-align:left; vertical-align:top}
+  th{background:var(--card2); color:var(--mut); font-size:12px; text-transform:uppercase; letter-spacing:.5px}
+
+  .toc{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 24px; margin:32px 0}
+  .toc ol{padding-left:20px; margin:0}
+  .toc a{color:var(--acc); text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+
+  .diagram{margin:24px 0; padding:20px; background:#0c0e12; border:1px solid var(--line); border-radius:12px; overflow-x:auto}
+  .diagram pre{margin:0; padding:0; border:none; background:none; color:#8fa6c9; white-space:pre}
+
+  footer{text-align:center; color:var(--mut); font-size:13px; margin-top:60px}
+</style>
+</head>
+<body>
+<header>
+  <span class="kicker">🥉 Nível 1 · Runbook</span>
+  <h1>Passo a Passo — montar o projeto do zero</h1>
+  <p>Este documento é o <b>runbook de reconstrução</b>: seguindo daqui, de cima pra baixo, você remonta o pipeline inteiro (Excel → pandas → Supabase → GitHub Actions → Streamlit) sem depender da memória. Inclui os comandos exatos, os arquivos completos e <b>todas as armadilhas que já custaram tempo</b> na primeira vez.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="diagram">
+<pre>  ETAPA 0        ETAPA 1        ETAPA 2·3         ETAPA 4          ETAPA 5           ETAPA 6          ETAPA 7
+┌─────────┐   ┌─────────┐   ┌────────────┐   ┌──────────┐   ┌──────────────┐   ┌────────────┐   ┌──────────┐
+│ Pasta + │──►│ ETL     │──►│ Supabase   │──►│ Repo Git │──►│ GitHub       │──►│ Streamlit  │──►│ Provar o │
+│ venv +  │   │ local   │   │ + schemas  │   │ + .env   │   │ Actions      │   │ lê o Gold  │   │ ciclo +  │
+│ deps    │   │ (sem BD)│   │ B/S/G      │   │ ignorado │   │ (cron)       │   │ (deploy)   │   │ README   │
+└─────────┘   └─────────┘   └────────────┘   └──────────┘   └──────────────┘   └────────────┘   └──────────┘</pre>
+  </div>
+
+  <div class="toc">
+    <b>Índice</b>
+    <ol>
+      <li><a href="#e0">Etapa 0 — Ambiente (pasta, venv, dependências)</a></li>
+      <li><a href="#e1">Etapa 1 — ETL rodando local, sem banco</a></li>
+      <li><a href="#e2">Etapa 2 — Supabase + conexão</a></li>
+      <li><a href="#e3">Etapa 3 — Schemas Bronze/Silver/Gold + carga</a></li>
+      <li><a href="#e4">Etapa 4 — Git e GitHub (com segredos fora)</a></li>
+      <li><a href="#e5">Etapa 5 — Agendamento com GitHub Actions</a></li>
+      <li><a href="#e6">Etapa 6 — Dashboard Streamlit + deploy</a></li>
+      <li><a href="#e7">Etapa 7 — Fechar o ciclo e documentar</a></li>
+      <li><a href="#armadilhas">Resumo das armadilhas (cola rápida)</a></li>
+    </ol>
+  </div>
+
+  <!-- ============ ETAPA 0 ============ -->
+  <h3 class="sec">1 · O passo a passo completo</h3>
+
+  <div class="step" id="e0">
+    <div class="step-head"><div class="num">0</div>
+      <div><h2>Ambiente: pasta, venv e dependências</h2><p class="sub">Nada de nuvem ainda. Só um Python isolado que funciona.</p></div>
+      <span class="tag">~10 min</span>
+    </div>
+    <div class="body">
+      <div class="lbl">1. Criar a pasta e abrir no IDE</div>
+      <p>Estrutura final que vamos construir (guarde essa árvore como referência):</p>
+      <pre><code>Nível 1 - Simples/
+├── .github/workflows/etl.yml   <span class="c"># agendamento (Etapa 5)</span>
+├── data/                       <span class="c"># os 2 Excel brutos</span>
+│   ├── ..._movimentacao-estoque.xlsx
+│   └── ..._dim-produtos.xlsx
+├── notas/                      <span class="c"># documentação de estudo (opcional)</span>
+├── .venv/                      <span class="c"># NÃO vai pro Git</span>
+├── .env                        <span class="c"># NÃO vai pro Git (segredo!)</span>
+├── .env.example                <span class="c"># vai pro Git (sem senha)</span>
+├── .gitignore
+├── etl_estoque.py              <span class="c"># o pipeline (Etapas 1-3)</span>
+├── app.py                      <span class="c"># o dashboard (Etapa 6)</span>
+├── requirements.txt
+└── README.md</code></pre>
+
+      <div class="lbl">2. Criar e ativar o ambiente virtual (PowerShell)</div>
+      <pre><code>python -m venv .venv
+.venv\Scripts\Activate.ps1</code></pre>
+      <p>Deu certo quando o prompt do terminal passa a mostrar <code>(.venv)</code> na frente.</p>
+      <div class="warn">⚠️ Se o PowerShell recusar com <i>"execution of scripts is disabled"</i>, rode uma vez:<br><code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code></div>
+
+      <div class="lbl">3. Instalar as dependências</div>
+      <pre><code>pip install pandas openpyxl sqlalchemy psycopg2-binary python-dotenv</code></pre>
+      <table>
+        <tr><th>Pacote</th><th>Pra que serve</th></tr>
+        <tr><td><code>pandas</code></td><td>o ETL inteiro (DataFrames, groupby, merge)</td></tr>
+        <tr><td><code>openpyxl</code></td><td>engine que o pandas usa por baixo pra ler <code>.xlsx</code> — sem ele, <code>read_excel</code> quebra</td></tr>
+        <tr><td><code>sqlalchemy</code></td><td>cria a "engine" de conexão e permite <code>df.to_sql(...)</code></td></tr>
+        <tr><td><code>psycopg2-binary</code></td><td>o driver Postgres de verdade, que o SQLAlchemy chama por baixo</td></tr>
+        <tr><td><code>python-dotenv</code></td><td>lê o arquivo <code>.env</code> e joga em <code>os.environ</code></td></tr>
+      </table>
+
+      <div class="lbl">4. Congelar as versões</div>
+      <pre><code>pip freeze | Out-File -Encoding utf8 requirements.txt</code></pre>
+      <div class="trap">🐞 <b>Armadilha real:</b> <code>pip freeze &gt; requirements.txt</code> no PowerShell grava em <b>UTF-16LE</b> (padrão do <code>Out-File</code>). Sempre force <code>-Encoding utf8</code>. O GitHub Actions vai ler esse arquivo na Etapa 5 — melhor não descobrir lá.</div>
+
+      <div class="done"><b>Critério de pronto:</b> <code>(.venv)</code> aparece no prompt e <code>requirements.txt</code> existe, legível, em UTF-8.</div>
+    </div>
+  </div>
+
+  <!-- ============ ETAPA 1 ============ -->
+  <div class="step" id="e1">
+    <div class="step-head"><div class="num">1</div>
+      <div><h2>ETL rodando local — ainda <i>sem</i> banco</h2><p class="sub">Provar que os dados saem corretos do <code>transform()</code> antes de qualquer nuvem.</p></div>
+      <span class="tag">~40 min</span>
+    </div>
+    <div class="body">
+      <p>Esta é a etapa mais importante e a mais fácil de subestimar. A regra: <b>não conecte no banco enquanto não olhar os dados com os próprios olhos.</b> Se você carregar dado sujo, vai debugar no lugar errado depois.</p>
+
+      <div class="lbl">Como o script se organiza</div>
+      <ul>
+        <li><code>extract()</code> — lê os dois Excel, devolve dois DataFrames crus.</li>
+        <li><code>transform()</code> — devolve <b>três</b> DataFrames: bronze (cópia fiel), silver (limpo), gold (agregado).</li>
+        <li><code>load()</code> — escreve os três no Postgres. <b>Nesta etapa fica comentado.</b></li>
+      </ul>
+
+      <span class="fname">etl_estoque.py — extract</span>
+      <pre><code><span class="k">import</span> os
+<span class="k">import</span> pandas <span class="k">as</span> pd
+<span class="k">from</span> sqlalchemy <span class="k">import</span> create_engine, text
+<span class="k">from</span> dotenv <span class="k">import</span> load_dotenv
+
+load_dotenv()
+DATA = os.path.join(os.path.dirname(__file__), <span class="s">"data"</span>)  <span class="c"># pasta data/ ao lado do script</span>
+
+
+<span class="k">def</span> <span class="f">extract</span>():
+    mov  = pd.read_excel(<span class="s">f"{DATA}/2026-06-26_dados-brutos_movimentacao-estoque.xlsx"</span>)
+    prod = pd.read_excel(<span class="s">f"{DATA}/2026-06-26_dados-brutos_dim-produtos.xlsx"</span>)
+    <span class="k">return</span> mov, prod</code></pre>
+      <div class="trap">🐞 <b>Armadilha real:</b> se o script está na <b>raiz</b>, junto da pasta <code>data/</code>, o caminho é <code>os.path.join(dirname, "data")</code>. Um <code>".."</code> a mais (<code>join(dirname, "..", "data")</code>) sobe uma pasta e aponta pro lugar errado. Errar isso dá <code>FileNotFoundError</code> logo de cara.</div>
+
+      <div class="lbl">O transform — cada linha resolve um problema de dado sujo</div>
+      <p>Os Excel de origem são <b>sujos de propósito</b>. Nunca "arrume o Excel": toda limpeza mora aqui, e o Bronze guarda o bruto exatamente como veio.</p>
+
+      <span class="fname">etl_estoque.py — transform</span>
+      <pre><code><span class="k">def</span> <span class="f">transform</span>(mov, prod):
+    <span class="c"># ---- BRONZE: copia fiel do bruto (so para inspecao) ----</span>
+    bronze = mov.copy()
+
+    <span class="c"># ---- SILVER: limpeza observavel ----</span>
+    s = mov.copy()
+    <span class="k">for</span> col <span class="k">in</span> [<span class="s">"cod_loja"</span>, <span class="s">"tipo_movimentacao"</span>, <span class="s">"sku"</span>]:
+        s[col] = s[col].astype(str).str.strip().str.upper()      <span class="c"># 1) espacos + caixa</span>
+
+    s[<span class="s">"cod_loja"</span>] = s[<span class="s">"cod_loja"</span>].str.replace(<span class="s">"LOJA "</span>, <span class="s">"L"</span>, regex=<span class="k">False</span>)
+    num_loja = s[<span class="s">"cod_loja"</span>].str.extract(<span class="s">r"(\d+)"</span>)[<span class="s">0</span>].astype(int)
+    s[<span class="s">"cod_loja"</span>] = <span class="s">"L"</span> + num_loja.astype(str).str.zfill(<span class="s">3</span>)     <span class="c"># 2) padroniza loja</span>
+
+    iso      = s[<span class="s">"data"</span>].str.contains(<span class="s">"-"</span>, na=<span class="k">False</span>)
+    data_iso = pd.to_datetime(s.loc[iso,  <span class="s">"data"</span>], format=<span class="s">"%Y-%m-%d"</span>)
+    data_br  = pd.to_datetime(s.loc[~iso, <span class="s">"data"</span>], dayfirst=<span class="k">True</span>)
+    s[<span class="s">"data"</span>] = pd.concat([data_iso, data_br]).sort_index()      <span class="c"># 3) datas mistas</span>
+
+    neg = (s[<span class="s">"tipo_movimentacao"</span>] == <span class="s">"ENTRADA"</span>) & (s[<span class="s">"quantidade"</span>] &lt; <span class="s">0</span>)
+    s.loc[neg, <span class="s">"quantidade"</span>] = s.loc[neg, <span class="s">"quantidade"</span>].abs()      <span class="c"># 4) regra de negocio</span>
+    s = s.dropna(subset=[<span class="s">"quantidade"</span>, <span class="s">"valor_unitario"</span>])          <span class="c"># 5) nulos criticos</span>
+    s = s.drop_duplicates(
+        subset=[<span class="s">"data"</span>, <span class="s">"cod_loja"</span>, <span class="s">"sku"</span>, <span class="s">"tipo_movimentacao"</span>, <span class="s">"quantidade"</span>]
+    )                                                             <span class="c"># 6) duplicatas</span>
+
+    <span class="c"># dimensao de produtos: limpa e deduplica pela chave estavel (sku)</span>
+    p = prod.copy()
+    p[<span class="s">"sku"</span>] = p[<span class="s">"sku"</span>].astype(str).str.strip().str.upper()
+    p[<span class="s">"categoria"</span>] = p[<span class="s">"categoria"</span>].fillna(<span class="s">"SEM CATEGORIA"</span>).astype(str).str.strip().str.upper()
+    p = p.drop_duplicates(subset=[<span class="s">"sku"</span>], keep=<span class="s">"first"</span>)
+
+    silver = s.merge(p[[<span class="s">"sku"</span>, <span class="s">"categoria"</span>]], on=<span class="s">"sku"</span>, how=<span class="s">"left"</span>)
+    silver[<span class="s">"categoria"</span>] = silver[<span class="s">"categoria"</span>].fillna(<span class="s">"SEM CATEGORIA"</span>)  <span class="c"># sku sem cadastro</span>
+
+    <span class="c"># ---- GOLD: agrega o KPI por loja + categoria ----</span>
+    silver[<span class="s">"ent"</span>] = silver[<span class="s">"quantidade"</span>].where(silver[<span class="s">"tipo_movimentacao"</span>] == <span class="s">"ENTRADA"</span>, <span class="s">0</span>)
+    silver[<span class="s">"sai"</span>] = silver[<span class="s">"quantidade"</span>].where(silver[<span class="s">"tipo_movimentacao"</span>] == <span class="s">"SAIDA"</span>,   <span class="s">0</span>)
+
+    gold = silver.groupby([<span class="s">"cod_loja"</span>, <span class="s">"categoria"</span>], as_index=<span class="k">False</span>).agg(
+        qtd_entradas=(<span class="s">"ent"</span>, <span class="s">"sum"</span>),
+        qtd_saidas=(<span class="s">"sai"</span>, <span class="s">"sum"</span>),
+        preco_medio=(<span class="s">"valor_unitario"</span>, <span class="s">"mean"</span>),
+    )
+    gold[<span class="s">"saldo"</span>]       = gold[<span class="s">"qtd_entradas"</span>] - gold[<span class="s">"qtd_saidas"</span>]
+    gold[<span class="s">"valor_saldo"</span>] = (gold[<span class="s">"saldo"</span>] * gold[<span class="s">"preco_medio"</span>]).round(<span class="s">2</span>)
+    gold = gold[[<span class="s">"cod_loja"</span>, <span class="s">"categoria"</span>, <span class="s">"qtd_entradas"</span>, <span class="s">"qtd_saidas"</span>, <span class="s">"saldo"</span>, <span class="s">"valor_saldo"</span>]]
+
+    silver = silver.drop(columns=[<span class="s">"ent"</span>, <span class="s">"sai"</span>])  <span class="c"># remove colunas auxiliares</span>
+    <span class="k">return</span> bronze, silver, gold</code></pre>
+
+      <div class="trap">🐞 <b>Os dois bugs que custaram tempo (leia com atenção — eles voltam):</b>
+        <ul>
+          <li><b>Datas mistas:</b> a tentação é <code>pd.to_datetime(s["data"], format="mixed", dayfirst=True)</code>. Isso <b>corrompe as datas que já estão em ISO</b>: <code>2026-06-01</code> vira 6 de janeiro. A solução é separar por formato (tem <code>-</code> = ISO, parseia sem <code>dayfirst</code>; senão = BR, com <code>dayfirst=True</code>) e recombinar com <code>pd.concat(...).sort_index()</code> — o <code>sort_index()</code> é o que devolve as linhas à ordem original.</li>
+          <li><b>Código de loja:</b> só trocar <code>"LOJA " → "L"</code> não basta. O arquivo tem <code>LOJA 2</code>, <code>L02</code> e <code>L002</code> — sem normalizar os dígitos, viram <b>três lojas diferentes</b> no groupby do Gold. Por isso o <code>str.extract(r"(\d+)")</code> + <code>zfill(3)</code>: extrai só o número e remonta sempre com 3 dígitos.</li>
+        </ul>
+      </div>
+
+      <div class="lbl">Rodar e conferir com os próprios olhos</div>
+      <p>No <code>run()</code>, deixe o <code>load()</code> comentado e imprima os três DataFrames:</p>
+      <pre><code><span class="k">def</span> <span class="f">run</span>():
+    mov, prod = extract()
+    bronze, silver, gold = transform(mov, prod)
+    <span class="c"># load(bronze, silver, gold)   &lt;- so na Etapa 3</span>
+    print(bronze.head()); print(silver.head()); print(gold.head())
+    print(<span class="s">f"OK - bronze={len(bronze)} silver={len(silver)} gold={len(gold)}"</span>)
+
+
+<span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
+    run()</code></pre>
+      <pre><code>python etl_estoque.py</code></pre>
+      <p>Confira no <code>print</code>: as datas fazem sentido? as lojas estão todas no padrão <code>L001/L002/L003</code>? o Gold tem uma linha por loja+categoria?</p>
+
+      <div class="done"><b>Critério de pronto:</b> os 3 <code>print</code> mostram dados coerentes, sem exceção, e você <b>leu</b> o resultado — não só viu que não deu erro.</div>
+    </div>
+  </div>
+
+  <!-- ============ ETAPA 2 ============ -->
+  <div class="step" id="e2">
+    <div class="step-head"><div class="num">2</div>
+      <div><h2>Supabase: criar o banco e testar a conexão</h2><p class="sub">Postgres gerenciado, grátis. Só o banco importa — ignore Auth/Storage.</p></div>
+      <span class="tag">~15 min</span>
+    </div>
+    <div class="body">
+      <div class="lbl">1. Criar o projeto</div>
+      <ul>
+        <li>Criar conta em <code>supabase.com</code> → <b>New project</b>.</li>
+        <li><b>Guarde a senha do banco</b> na hora (ela só é mostrada uma vez; depois só resetando).</li>
+      </ul>
+
+      <div class="lbl">2. Pegar a connection string — MODO SESSION POOLER</div>
+      <p>Project Settings → Database → Connection string → no seletor <b>"Connect method"</b>, escolha <b>Session pooler</b> (NÃO "Direct connection"). Formato:</p>
+      <pre><code>postgresql://postgres.&lt;ref-do-projeto&gt;:&lt;SENHA&gt;@aws-1-&lt;regiao&gt;.pooler.supabase.com:5432/postgres</code></pre>
+      <div class="trap">🐞 <b>A armadilha mais cara do projeto inteiro.</b> A "Direct connection" (<code>@db.xxxx.supabase.co</code>) resolve para um endereço <b>IPv6</b>. Funciona na sua máquina (sua rede tem IPv6) e <b>falha em toda nuvem</b> — GitHub Actions e Streamlit Cloud não têm saída IPv6 → <code>psycopg2.OperationalError: Network is unreachable</code>. O <b>Session pooler</b> é IPv4. Adote ele desde o dia 1, nos três ambientes (local, Actions, Streamlit), pra nunca ter strings divergentes.</div>
+
+      <div class="lbl">3. Criar o <code>.env</code> na raiz</div>
+      <span class="fname">.env  (NUNCA vai pro Git)</span>
+      <pre><code>SUPABASE_URL=postgresql://postgres.abcdefgh:MinhaSenha@aws-1-sa-east-1.pooler.supabase.com:5432/postgres</code></pre>
+      <p>Sem aspas, sem espaços, sem ponto-e-vírgula. O <code>load_dotenv()</code> lê esse arquivo e o script acessa via <code>os.environ["SUPABASE_URL"]</code>.</p>
+
+      <div class="lbl">4. Testar a conexão ANTES de escrever qualquer <code>load()</code></div>
+      <p>Este one-liner é o melhor investimento do projeto: se ele retorna a versão do Postgres, rede e credencial estão OK, e qualquer erro futuro é <b>seu código</b>, não infra.</p>
+      <pre><code>python -c "from dotenv import load_dotenv; import os; from sqlalchemy import create_engine, text; load_dotenv(); engine = create_engine(os.environ['SUPABASE_URL']); conn = engine.connect(); print(conn.execute(text('SELECT version()')).fetchone()); conn.close()"</code></pre>
+      <p>Esperado: <code>('PostgreSQL 17.x on x86_64-pc-linux-gnu...',)</code></p>
+
+      <div class="done"><b>Critério de pronto:</b> o one-liner imprime a versão do Postgres.</div>
+    </div>
+  </div>
+
+  <!-- ============ ETAPA 3 ============ -->
+  <div class="step" id="e3">
+    <div class="step-head"><div class="num">3</div>
+      <div><h2>Schemas Bronze/Silver/Gold + carga real</h2><p class="sub">A arquitetura Medalhão dentro do Postgres.</p></div>
+      <span class="tag">~20 min</span>
+    </div>
+    <div class="body">
+      <div class="lbl">1. Criar os schemas (SQL Editor do Supabase)</div>
+      <pre><code><span class="k">create schema if not exists</span> dw_bronze;
+<span class="k">create schema if not exists</span> dw_silver;
+<span class="k">create schema if not exists</span> dw_gold;</code></pre>
+
+      <div class="lbl">2. Criar SÓ a tabela do Gold</div>
+      <pre><code><span class="k">create table if not exists</span> dw_gold.posicao_estoque (
+    cod_loja      text,
+    categoria     text,
+    qtd_entradas  numeric,
+    qtd_saidas    numeric,
+    saldo         numeric,
+    valor_saldo   numeric
+);</code></pre>
+      <div class="warn">💡 <b>Por que só o Gold?</b> No <code>load()</code>, Bronze e Silver usam <code>to_sql(if_exists="replace")</code> — o pandas <b>cria a tabela sozinho</b> (e recria a cada rodada). O Gold usa <code>truncate</code> + <code>append</code>, para preservar os tipos que você definiu — e <code>truncate</code> numa tabela que não existe dá erro. Daí o <code>CREATE TABLE</code> manual.</div>
+
+      <div class="lbl">3. O <code>load()</code></div>
+      <span class="fname">etl_estoque.py — load</span>
+      <pre><code><span class="k">def</span> <span class="f">load</span>(bronze, silver, gold):
+    engine = create_engine(os.environ[<span class="s">"SUPABASE_URL"</span>])
+    <span class="k">with</span> engine.begin() <span class="k">as</span> conn:            <span class="c"># begin() = tudo numa transacao (ou entra tudo, ou nada)</span>
+        bronze.to_sql(<span class="s">"movimentacao"</span>, conn, schema=<span class="s">"dw_bronze"</span>, if_exists=<span class="s">"replace"</span>, index=<span class="k">False</span>)
+        silver.to_sql(<span class="s">"movimentacao"</span>, conn, schema=<span class="s">"dw_silver"</span>, if_exists=<span class="s">"replace"</span>, index=<span class="k">False</span>)
+        conn.execute(text(<span class="s">"truncate table dw_gold.posicao_estoque"</span>))
+        gold.to_sql(<span class="s">"posicao_estoque"</span>, conn, schema=<span class="s">"dw_gold"</span>, if_exists=<span class="s">"append"</span>, index=<span class="k">False</span>)</code></pre>
+
+      <div class="lbl">4. Reativar o load e rodar de verdade</div>
+      <p>Descomente <code>load(bronze, silver, gold)</code> no <code>run()</code>, remova os <code>print</code> de debug da Etapa 1, e rode:</p>
+      <pre><code>python etl_estoque.py
+<span class="c"># OK - bronze=... silver=... gold=...</span></code></pre>
+      <p>Confirme no <b>Table Editor</b> do Supabase que as 3 tabelas apareceram populadas.</p>
+
+      <div class="done"><b>Critério de pronto:</b> <code>OK - bronze=… silver=… gold=…</code> no terminal e as 3 tabelas visíveis no Supabase.</div>
+    </div>
+  </div>
+
+  <!-- ============ ETAPA 4 ============ -->
+  <div class="step" id="e4">
+    <div class="step-head"><div class="num">4</div>
+      <div><h2>Git e GitHub — com o segredo fora</h2><p class="sub">O ponto crítico: não vazar a connection string.</p></div>
+      <span class="tag">~20 min</span>
+    </div>
+    <div class="body">
+      <div class="lbl">1. Criar o <code>.gitignore</code> ANTES do primeiro <code>git add</code></div>
+      <span class="fname">.gitignore</span>
+      <pre><code>.venv/
+.env
+__pycache__/
+*.pyc
+.claude/</code></pre>
+      <p>Ordem importa: se o <code>.env</code> entrar num commit, tirar depois não basta — ele fica no histórico pra sempre e a senha está queimada.</p>
+
+      <div class="lbl">2. Criar o <code>.env.example</code> (esse SIM vai pro Git)</div>
+      <span class="fname">.env.example</span>
+      <pre><code><span class="c"># Use a connection string do modo "Session pooler" (nao "Direct connection") —</span>
+<span class="c"># a direta resolve para IPv6 e falha em ambientes de nuvem sem saida IPv6</span>
+<span class="c"># (GitHub Actions, Streamlit Cloud).</span>
+SUPABASE_URL=postgresql://postgres.xxxxxxxx:sua-senha@aws-N-regiao.pooler.supabase.com:5432/postgres</code></pre>
+
+      <div class="lbl">3. Criar o repositório vazio no GitHub</div>
+      <ul>
+        <li><code>github.com/new</code> → <b>sem</b> README, <b>sem</b> .gitignore, <b>sem</b> license (qualquer um deles cria um commit remoto e faz o primeiro <code>push</code> dar conflito).</li>
+        <li><b>Nome só em ASCII</b> — o GitHub troca acento por <code>-</code> silenciosamente ("Nível" → <code>N-vel</code>). Use <code>PROJ011_Nivel-1_ELT-simples</code>.</li>
+      </ul>
+
+      <div class="lbl">4. Identidade do Git (uma vez por máquina)</div>
+      <pre><code>git config --global user.name  <span class="s">"Seu Nome"</span>
+git config --global user.email <span class="s">"seu@email.com"</span></code></pre>
+      <div class="trap">🐞 Sem isso, o <code>git commit</code> <b>falha</b> com <i>"Please tell me who you are"</i>. Aconteceu na primeira vez.</div>
+
+      <div class="lbl">5. Inicializar, conferir e subir</div>
+      <pre><code>git init
+git status              <span class="c"># &lt;- LEIA a lista: o .env NAO pode aparecer aqui</span>
+git add .
+git status              <span class="c"># &lt;- confira de novo o que foi pro stage</span>
+git commit -m <span class="s">"Initial commit: ETL estoque com pipeline Bronze/Silver/Gold"</span>
+
+git remote add origin https://github.com/&lt;usuario&gt;/&lt;repo&gt;.git   <span class="c"># liga o local ao remoto</span>
+git branch -M main                                              <span class="c"># renomeia a branch atual pra main</span>
+git push -u origin main                                         <span class="c"># envia e cria o vinculo</span></code></pre>
+      <p>Se algum arquivo indesejado já entrou no stage: <code>git rm --cached &lt;arquivo&gt;</code> e adicione ao <code>.gitignore</code>.</p>
+
+      <div class="done"><b>Critério de pronto:</b> repo online com <code>etl_estoque.py</code>, <code>requirements.txt</code>, <code>data/</code> e <code>.env.example</code> — e você <b>abriu o repo no navegador e confirmou visualmente</b> que o <code>.env</code> não está lá.</div>
+    </div>
+  </div>
+
+  <!-- ============ ETAPA 5 ============ -->
+  <div class="step" id="e5">
+    <div class="step-head"><div class="num">5</div>
+      <div><h2>Agendamento com GitHub Actions</h2><p class="sub">O "orquestrador" do Nível 1 — sem Airflow, sem Docker.</p></div>
+      <span class="tag">~30 min</span>
+    </div>
+    <div class="body">
+      <p><b>Modelo mental:</b> o GitHub liga uma <b>VM Ubuntu vazia e efêmera</b>, ela clona seu repo, instala Python, instala as deps, roda o script e é destruída. Nada persiste entre execuções — é por isso que <code>requirements.txt</code> precisa estar correto e o segredo precisa ser injetado toda vez.</p>
+
+      <div class="lbl">1. Criar o workflow</div>
+      <p>O GitHub descobre <b>automaticamente</b> qualquer <code>.yml</code> dentro de <code>.github/workflows/</code>. O caminho é a única coisa que importa; o nome do arquivo é livre.</p>
+
+      <span class="fname">.github/workflows/etl.yml</span>
+      <pre><code><span class="f">name</span>: ETL Estoque  <span class="c"># nome exibido na aba Actions, so um rotulo</span>
+
+<span class="f">on</span>:
+  <span class="f">workflow_dispatch</span>: {}   <span class="c"># habilita o botao "Run workflow" manual na aba Actions</span>
+  <span class="f">schedule</span>:
+    <span class="c"># cron roda sempre em UTC. "0 9 * * *" = todo dia as 09:00 UTC (06:00 no -03)</span>
+    - <span class="f">cron</span>: <span class="s">"0 9 * * *"</span>
+
+<span class="f">jobs</span>:
+  <span class="f">run-etl</span>:
+    <span class="f">runs-on</span>: ubuntu-latest   <span class="c"># VM efemera: nasce vazia, e destruida no fim</span>
+    <span class="f">steps</span>:
+      - <span class="f">uses</span>: actions/checkout@v4       <span class="c"># clona o repo dentro da VM</span>
+
+      - <span class="f">uses</span>: actions/setup-python@v5   <span class="c"># instala o Python na VM</span>
+        <span class="f">with</span>:
+          <span class="f">python-version</span>: <span class="s">"3.12"</span>
+
+      - <span class="f">run</span>: pip install -r requirements.txt   <span class="c"># instala as dependencias</span>
+
+      - <span class="f">run</span>: python etl_estoque.py             <span class="c"># roda o ETL de verdade</span>
+        <span class="f">env</span>:
+          <span class="c"># injeta o secret so nesse processo; o GitHub mascara o valor nos logs</span>
+          <span class="f">SUPABASE_URL</span>: ${{ secrets.SUPABASE_URL }}</code></pre>
+
+      <div class="lbl">Ler o cron (5 campos)</div>
+      <pre><code>┌─ minuto (0-59)
+│ ┌─ hora (0-23)  ← em UTC!
+│ │ ┌─ dia do mês (1-31)
+│ │ │ ┌─ mês (1-12)
+│ │ │ │ ┌─ dia da semana (0-6, 0=domingo)
+│ │ │ │ │
+0 9 * * *   →  todo dia, 09:00 UTC  =  06:00 em Brasília (-03)</code></pre>
+      <div class="warn">⚠️ Sempre inclua <code>workflow_dispatch</code>. Sem ele você não consegue testar sem esperar o cron — e o cron do GitHub é "best effort", pode atrasar minutos.</div>
+
+      <div class="lbl">2. Cadastrar o secret</div>
+      <p>Repo → <b>Settings</b> → <b>Secrets and variables</b> → <b>Actions</b> → <b>New repository secret</b>:</p>
+      <ul>
+        <li>Name: <code>SUPABASE_URL</code></li>
+        <li>Secret: <b>só a URI pura</b> — <code>postgresql://postgres.xxx:senha@aws-1-....pooler.supabase.com:5432/postgres</code></li>
+      </ul>
+      <div class="trap">🐞 <b>Armadilha real:</b> <code>sqlalchemy.exc.ArgumentError: Could not parse SQLAlchemy URL</code>. Causa: o valor colado no secret tinha lixo junto — o prefixo <code>SUPABASE_URL=</code>, aspas, ou um espaço/quebra de linha. O campo do secret é <b>só o valor</b>, não a linha do <code>.env</code>.</div>
+
+      <div class="lbl">3. Rodar manualmente e ler o log</div>
+      <p>Aba <b>Actions</b> → workflow "ETL Estoque" → <b>Run workflow</b> → clique na execução e abra os steps.</p>
+      <div class="trap">🐞 <b>Armadilha real:</b> <code>psycopg2.OperationalError: connection to server at "..." (2600:...), port 5432 failed: Network is unreachable</code>. Aquele <code>2600:...</code> é um <b>IPv6</b>. Runners do GitHub não têm saída IPv6. <b>Solução:</b> trocar a connection string para <b>Session pooler</b> no Supabase e atualizar <b>nos dois lugares</b> — o <code>.env</code> local e o secret do GitHub. (Se você já seguiu a Etapa 2 corretamente, isso nunca acontece.)</div>
+      <div class="warn">💡 Um <i>warning</i> de "Node.js 20 deprecation" no log é normal e não é seu problema — é o runtime interno das actions oficiais.</div>
+      <div class="warn">⚠️ Repositório sem nenhum push por ~60 dias: o GitHub <b>pausa automaticamente</b> os workflows agendados. O <code>workflow_dispatch</code> continua funcionando. Basta um push (ou reativar na aba Actions) pra religar o cron.</div>
+
+      <div class="done"><b>Critério de pronto:</b> execução manual <b>verde</b> na aba Actions e os dados atualizados no Supabase.</div>
+    </div>
+  </div>
+
+  <!-- ============ ETAPA 6 ============ -->
+  <div class="step" id="e6">
+    <div class="step-head"><div class="num">6</div>
+      <div><h2>Dashboard em Streamlit + deploy</h2><p class="sub">Python puro, sem front-end. Lê <b>só</b> o Gold.</p></div>
+      <span class="tag">~40 min</span>
+    </div>
+    <div class="body">
+      <p><b>Modelo mental do Streamlit:</b> não existe "atualizar só um pedaço da tela". A cada interação (clique, filtro, F5) o <b>script inteiro roda de novo, do topo ao fim</b>. É por isso que a consulta ao banco <b>precisa</b> de cache — sem ele, cada clique abre uma conexão nova no Supabase.</p>
+
+      <div class="lbl">1. Instalar e congelar</div>
+      <pre><code>pip install streamlit
+pip freeze | Out-File -Encoding utf8 requirements.txt   <span class="c"># regenera COM o streamlit dentro</span></code></pre>
+      <div class="warn">⚠️ Se esquecer de regenerar o <code>requirements.txt</code>, o deploy no Streamlit Cloud <b>falha</b> (a VM dele instala só o que está no arquivo).</div>
+
+      <div class="lbl">2. O <code>app.py</code></div>
+      <span class="fname">app.py</span>
+      <pre><code><span class="k">import</span> os
+<span class="k">import</span> pandas <span class="k">as</span> pd
+<span class="k">import</span> streamlit <span class="k">as</span> st
+<span class="k">from</span> sqlalchemy <span class="k">import</span> create_engine
+<span class="k">from</span> dotenv <span class="k">import</span> load_dotenv
+
+load_dotenv()  <span class="c"># le o .env local; no Streamlit Cloud quem injeta as env vars e o secret do painel</span>
+
+st.set_page_config(page_title=<span class="s">"Posição de Estoque"</span>, layout=<span class="s">"wide"</span>)  <span class="c"># 1a chamada st.*, obrigatorio</span>
+
+
+<span class="f">@st.cache_data(ttl=600)</span>  <span class="c"># cacheia o resultado por 10min p/ nao bater no banco a cada interacao</span>
+<span class="k">def</span> <span class="f">load_gold</span>():
+    engine = create_engine(os.environ[<span class="s">"SUPABASE_URL"</span>])
+    <span class="c"># so le o schema Gold (regra do Medalhao: dashboard nunca toca Bronze/Silver)</span>
+    <span class="k">return</span> pd.read_sql(<span class="s">"select * from dw_gold.posicao_estoque"</span>, engine)
+
+
+st.title(<span class="s">"Posição de Estoque"</span>)
+st.caption(<span class="s">"Dados consumidos direto do schema dw_gold (Medalhão) no Supabase."</span>)
+
+df = load_gold()
+
+col1, col2, col3 = st.columns(<span class="s">3</span>)  <span class="c"># 3 colunas lado a lado, cada uma vira um KPI card</span>
+col1.metric(<span class="s">"Saldo total (unid.)"</span>,     <span class="s">f"{df['saldo'].sum():,.0f}"</span>)
+col2.metric(<span class="s">"Valor total em estoque"</span>,  <span class="s">f"R$ {df['valor_saldo'].sum():,.2f}"</span>)
+col3.metric(<span class="s">"Lojas"</span>,                   df[<span class="s">"cod_loja"</span>].nunique())
+
+st.subheader(<span class="s">"Saldo por loja"</span>)
+<span class="c"># as_index=True mantem cod_loja como indice -> vira o eixo X do grafico</span>
+saldo_loja = df.groupby(<span class="s">"cod_loja"</span>, as_index=<span class="k">True</span>)[<span class="s">"saldo"</span>].sum()
+st.bar_chart(saldo_loja)
+
+st.subheader(<span class="s">"Valor em estoque por categoria"</span>)
+valor_categoria = df.groupby(<span class="s">"categoria"</span>, as_index=<span class="k">True</span>)[<span class="s">"valor_saldo"</span>].sum()
+st.bar_chart(valor_categoria)
+
+st.subheader(<span class="s">"Detalhe (loja x categoria)"</span>)
+st.dataframe(df, width=<span class="s">"stretch"</span>)  <span class="c"># tabela interativa (ordenavel)</span></code></pre>
+      <div class="warn">💡 Detalhes que economizam tempo: <code>st.set_page_config</code> precisa ser a <b>primeira</b> chamada <code>st.*</code> do arquivo, senão dá erro. E use <code>width="stretch"</code> — o antigo <code>use_container_width=True</code> está <i>deprecated</i>.</div>
+
+      <div class="lbl">3. Testar local</div>
+      <pre><code>streamlit run app.py   <span class="c"># abre em http://localhost:8501</span></code></pre>
+
+      <div class="lbl">4. Deploy no Streamlit Community Cloud (grátis)</div>
+      <ol>
+        <li>Commit + push do <code>app.py</code> e do <code>requirements.txt</code> atualizado.</li>
+        <li><code>share.streamlit.io</code> → login com GitHub → <b>New app</b>.</li>
+        <li>Selecionar: repositório, branch <code>main</code>, main file <code>app.py</code>.</li>
+        <li><b>Advanced settings → Secrets</b> — formato <b>TOML</b> (é diferente do <code>.env</code>! tem aspas e espaços):
+          <pre><code>SUPABASE_URL = <span class="s">"postgresql://postgres.xxx:senha@aws-1-sa-east-1.pooler.supabase.com:5432/postgres"</span></code></pre>
+        </li>
+        <li><b>Deploy</b>. O log de build aparece na própria tela.</li>
+      </ol>
+      <div class="trap">🐞 Mesma história do IPv6 aqui: o Streamlit Cloud também não tem saída IPv6. <b>Session pooler</b>, sempre.</div>
+
+      <div class="done"><b>Critério de pronto:</b> URL pública do Streamlit mostrando os KPIs vindos do Gold.</div>
+    </div>
+  </div>
+
+  <!-- ============ ETAPA 7 ============ -->
+  <div class="step" id="e7">
+    <div class="step-head"><div class="num">7</div>
+      <div><h2>Fechar o ciclo e documentar</h2><p class="sub">Provar que as pontas se conectam sem nenhum passo manual no meio.</p></div>
+      <span class="tag">~30 min</span>
+    </div>
+    <div class="body">
+      <div class="lbl">1. O teste de ponta a ponta</div>
+      <ol>
+        <li>Adicione <b>uma linha nova</b> no Excel de movimentação (ex.: loja <code>L03</code>, um SKU novo, 20 unidades ENTRADA) — e o SKU correspondente no Excel de produtos, senão a categoria sai como <code>SEM CATEGORIA</code>.</li>
+        <li><code>git add . &amp;&amp; git commit -m "..." &amp;&amp; git push</code></li>
+        <li>Aba <b>Actions</b> → <b>Run workflow</b> → esperar ficar verde.</li>
+        <li>Conferir no Supabase que a linha nova chegou em <code>dw_gold.posicao_estoque</code>.</li>
+        <li>Abrir o Streamlit e ver a mudança refletida.</li>
+      </ol>
+      <div class="trap">🐞 <b>Armadilha real (você vai cair de novo):</b> "rodei tudo, o Supabase mudou, mas o Streamlit continua igual". <b>Não é bug do pipeline</b> — é o <code>@st.cache_data(ttl=600)</code> servindo o resultado de até 10 minutos atrás. Espere o TTL ou use o menu <b>⋮ → Clear cache</b> e <b>Rerun</b>.<br><br>
+      <b>Método de diagnóstico</b> (vale pra qualquer pipeline): antes de culpar o ETL, consulte o banco direto. Se o dado <b>está lá</b>, o problema é do <i>frontend</i> (cache), não do backend.</div>
+
+      <div class="lbl">2. Escrever o <code>README.md</code></div>
+      <p>Curto e útil. Precisa ter: arquitetura em 3 linhas, como rodar local, como o agendamento funciona, e — o mais importante — <b>onde cada segredo é cadastrado</b>:</p>
+      <table>
+        <tr><th>Ambiente</th><th>Onde cadastrar o <code>SUPABASE_URL</code></th></tr>
+        <tr><td>Local</td><td><code>.env</code> na raiz (gitignored)</td></tr>
+        <tr><td>GitHub Actions</td><td>Settings → Secrets and variables → Actions</td></tr>
+        <tr><td>Streamlit Cloud</td><td>App → Settings → Secrets (formato TOML)</td></tr>
+      </table>
+      <p>São <b>três lugares independentes</b>, cada um com seu próprio mecanismo. Trocar a senha do banco significa trocar nos três.</p>
+
+      <div class="lbl">3. Anotar as limitações — isso vira a entrada do Nível 2</div>
+      <ul>
+        <li><b>Fonte é Excel manual</b> — sem contrato de schema; mudar uma coluna quebra o <code>extract()</code>.</li>
+        <li><b>Sem testes de dados</b> (dbt tests, Great Expectations) — os bugs de qualidade foram pegos no olho, não por um teste que falha no CI.</li>
+        <li><b><code>load()</code> é replace/truncate total</b> — sem carga incremental, sem histórico, sem trilha de auditoria.</li>
+        <li><b>Orquestração é um step linear</b> — o Actions não modela dependência entre tarefas, retries granulares nem paralelismo. É o argumento concreto pra existir o Airflow/Dagster.</li>
+        <li><b>Sem alertas de falha</b> — se o Actions quebrar, ninguém é avisado.</li>
+      </ul>
+
+      <div class="done"><b>Critério de pronto (Nível 1 concluído):</b> Excel → Actions → Supabase → Streamlit funcionando de ponta a ponta, na nuvem, com README.</div>
+    </div>
+  </div>
+
+  <!-- ============ ARMADILHAS ============ -->
+  <h3 class="sec" id="armadilhas">2 · Cola rápida: as armadilhas</h3>
+  <p>Se algo quebrar daqui a 6 meses, comece por aqui — a chance de ser um destes é alta.</p>
+  <table>
+    <tr><th>Sintoma</th><th>Causa</th><th>Correção</th></tr>
+    <tr>
+      <td><code>Network is unreachable</code> com um IP tipo <code>2600:...</code></td>
+      <td>Connection string em modo <b>Direct connection</b> → IPv6. Nuvem não tem IPv6.</td>
+      <td>Trocar para <b>Session pooler</b> no Supabase, nos <b>3</b> lugares (.env, secret do Actions, secret do Streamlit).</td>
+    </tr>
+    <tr>
+      <td><code>Could not parse SQLAlchemy URL</code></td>
+      <td>Secret com lixo: prefixo <code>SUPABASE_URL=</code>, aspas ou espaço.</td>
+      <td>Recadastrar só a URI pura.</td>
+    </tr>
+    <tr>
+      <td>Datas erradas (dia virou mês)</td>
+      <td><code>format="mixed", dayfirst=True</code> corrompe datas já em ISO.</td>
+      <td>Separar ISO × BR por <code>str.contains("-")</code>, parsear cada um, <code>concat().sort_index()</code>.</td>
+    </tr>
+    <tr>
+      <td>Lojas duplicadas no Gold (<code>L02</code> ≠ <code>L002</code>)</td>
+      <td>Normalização de string incompleta.</td>
+      <td><code>str.extract(r"(\d+)")</code> + <code>"L" + zfill(3)</code>.</td>
+    </tr>
+    <tr>
+      <td><code>requirements.txt</code> ilegível/estranho</td>
+      <td><code>&gt;</code> do PowerShell grava em UTF-16LE.</td>
+      <td><code>pip freeze | Out-File -Encoding utf8 requirements.txt</code>.</td>
+    </tr>
+    <tr>
+      <td>Streamlit não mostra o dado novo</td>
+      <td><code>@st.cache_data(ttl=600)</code> servindo cache velho.</td>
+      <td>Esperar 10 min ou ⋮ → <b>Clear cache</b> + <b>Rerun</b>. Confirme antes que o dado está no Supabase.</td>
+    </tr>
+    <tr>
+      <td>Deploy do Streamlit falha no build</td>
+      <td><code>requirements.txt</code> sem <code>streamlit</code> (esqueceu de regenerar).</td>
+      <td>Regenerar, commitar, push — o deploy refaz sozinho.</td>
+    </tr>
+    <tr>
+      <td><code>git commit</code> recusa ("who are you?")</td>
+      <td>Identidade Git não configurada na máquina.</td>
+      <td><code>git config --global user.name / user.email</code>.</td>
+    </tr>
+    <tr>
+      <td>Nome do repo com <code>-</code> no lugar do acento</td>
+      <td>GitHub não aceita acento e substitui em silêncio.</td>
+      <td>Nomear em ASCII desde o início (rename depois obriga a atualizar <code>git remote set-url</code> e reconectar o Streamlit).</td>
+    </tr>
+    <tr>
+      <td>Cron não dispara</td>
+      <td>Repo sem push há ~60 dias → GitHub pausa <code>schedule</code>.</td>
+      <td>Qualquer push religa. <code>workflow_dispatch</code> nunca é pausado.</td>
+    </tr>
+  </table>
+
+  <div class="prof" style="margin-top:32px">
+    <p><b>A regra que vale mais que o passo a passo.</b> A ordem das etapas não é estética: cada uma <b>isola uma classe de erro</b>. Rodar o ETL sem banco (1) separa erro de dado de erro de rede. Testar a conexão com o one-liner (2) separa erro de infra de erro de código. Rodar o Actions manualmente (5) separa erro de ambiente de erro de cron. Se você pular etapa, não economiza tempo — só junta várias causas possíveis num erro só, e aí o debug custa o dobro.</p>
+  </div>
+
+  <footer>PROJ011 — Nível 1 · Runbook de reconstrução · 2026-07-12 · companheiro de <code>01_panorama_nivel-1-pipeline-etapas.html</code></footer>
+
+</div>
+</body>
+</html>
