@@ -194,7 +194,7 @@
   <div class="step">
     <div class="step-head"><div class="num">4</div>
       <div><h2>Versionar no GitHub (com segredos fora)</h2><p class="sub">Repo limpo, <code>.gitignore</code> e <code>.env.example</code>.</p></div>
-      <span class="tag">~45min</span>
+      <span class="tag">✅ Concluído</span>
     </div>
     <div class="body">
       <p>Para agendar na nuvem, o código precisa estar no GitHub. O ponto crítico aqui é <b>não vazar a connection string</b>.</p>
@@ -204,6 +204,14 @@
         <li>Criar um <code>.env.example</code> (sem a senha real) documentando <code>SUPABASE_URL=</code>.</li>
         <li>Commit e push para um repositório novo no GitHub.</li>
         <li>Conferir no GitHub que <b>o <code>.env</code> não subiu</b>.</li>
+      </ul>
+      <div class="lbl">O que aconteceu na prática</div>
+      <ul>
+        <li>Repositório criado antes pelo navegador (github.com/new), sem README/gitignore/license iniciais, para evitar conflito no primeiro push.</li>
+        <li><code>git status</code> revelou que <code>.claude/settings.local.json</code> (config local do Claude Code, sem segredos) também seria commitado — adicionado ao <code>.gitignore</code> e removido do stage com <code>git rm --cached</code> antes do commit.</li>
+        <li><code>git commit</code> falhou na primeira tentativa por falta de identidade Git — resolvido com <code>git config --global user.name</code> e <code>user.email</code>.</li>
+        <li><code>git remote add origin ...</code> + <code>git branch -M main</code> + <code>git push -u origin main</code> — autenticação via navegador, push concluído.</li>
+        <li>Confirmado visualmente no GitHub: <code>.env</code> ausente, só <code>.env.example</code> presente.</li>
       </ul>
       <div class="done"><b>Critério de pronto:</b> repo online, com <code>etl_estoque.py</code>, <code>requirements.txt</code>, <code>data/</code> e <code>.env.example</code> — e sem nenhum segredo.</div>
     </div>
