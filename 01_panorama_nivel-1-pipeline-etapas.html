@@ -277,7 +277,7 @@
   <div class="step">
     <div class="step-head"><div class="num">7</div>
       <div><h2>Fechar e revisar o ciclo</h2><p class="sub">Provar que tudo se conecta e documentar.</p></div>
-      <span class="tag">~1h</span>
+      <span class="tag">✅ Concluído</span>
     </div>
     <div class="body">
       <p>O Nível 1 termina quando você consegue disparar o pipeline e ver o dashboard refletir a mudança — sem tocar em nada manualmente entre as pontas.</p>
@@ -287,8 +287,21 @@
         <li>Escrever um <code>README.md</code> curto: como rodar local, como o cron funciona, onde estão os segredos.</li>
         <li>Anotar limitações (ex.: Excel ainda é a fonte, sem testes de dados) — isso vira a lista de entrada do <b>Nível 2</b>.</li>
       </ul>
+      <div class="lbl">O que aconteceu na prática</div>
+      <ul>
+        <li>Linha nova adicionada manualmente em <code>data/2026-06-26_dados-brutos_movimentacao-estoque.xlsx</code>: loja <code>L03</code>, SKU novo <code>ARM-777</code> (categoria "armacao premium"), 20 unidades ENTRADA — e o SKU correspondente adicionado em <code>dim-produtos.xlsx</code>.</li>
+        <li>Commit/push feitos, Actions disparado manualmente (via <b>Run workflow</b>) — rodou verde e o Supabase recebeu a linha nova: <code>('L003', 'ARMACAO PREMIUM', 20.0, 0.0, 20.0, 1000.0)</code> em <code>dw_gold.posicao_estoque</code>.</li>
+        <li><b>1ª checagem no Streamlit:</b> mudança não apareceu — causa: <code>@st.cache_data(ttl=600)</code> ainda estava servindo o resultado em cache de antes da nova execução do Actions.</li>
+        <li><b>Resolvido</b> aguardando o TTL expirar (ou via ⋮ → Rerun/Clear cache) — na checagem seguinte, <code>L003 / ARMACAO PREMIUM</code> apareceu corretamente no dashboard. Confirmado ciclo completo: Excel → Actions → Supabase → Streamlit, sem nenhum passo manual no meio.</li>
+        <li><code>README.md</code> criado na raiz com arquitetura, setup local, como o agendamento funciona, tabela de onde cada secret é cadastrado (local/.env, GitHub Actions, Streamlit Cloud) e a lista de limitações abaixo.</li>
+        <li><code>.env.example</code> corrigido para refletir o formato de connection string via <b>session pooler</b> (o antigo mostrava "Direct connection", que sabemos que falha em nuvem).</li>
+      </ul>
       <div class="done"><b>Critério de pronto (Nível 1 concluído):</b> Excel → Actions → Supabase → Streamlit funcionando de ponta a ponta, na nuvem, com um README.</div>
     </div>
+  </div>
+
+  <div class="prof" style="margin-top:24px">
+    <p><b>🎉 Nível 1 concluído.</b> As 7 etapas estão verdes — pipeline de ponta a ponta, na nuvem, documentado.</p>
   </div>
 
   <h3 class="sec">O que NÃO fazer no Nível 1</h3>
