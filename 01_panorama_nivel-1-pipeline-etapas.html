@@ -241,6 +241,7 @@
         <li><b>Correção:</b> trocado o connect method no Supabase (Project Settings → Database → Connection string) de "Direct connection" para <b>"Session pooler"</b> (compatível com IPv4, host <code>aws-0-&lt;região&gt;.pooler.supabase.com</code>). String atualizada tanto no <code>.env</code> local quanto no secret do GitHub, para manter os dois ambientes consistentes.</li>
         <li><b>3ª tentativa:</b> execução manual via <b>Run workflow</b> ficou verde.</li>
       </ul>
+      <div class="warn">⚠️ Repositório sem nenhum commit/push por ~60 dias: o GitHub <b>pausa automaticamente</b> os workflows agendados (<code>schedule</code>) até alguém interagir com o repo de novo (push, ou reativar manualmente na aba Actions). O gatilho <code>workflow_dispatch</code> continua disponível normalmente.</div>
       <div class="done"><b>Critério de pronto:</b> execução manual verde na aba Actions e os dados atualizados no Supabase.</div>
     </div>
   </div>

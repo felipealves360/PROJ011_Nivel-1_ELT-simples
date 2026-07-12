@@ -1,22 +1,27 @@
-name: ETL Estoque
+# Ver notas/github-actions-workflow.md (raiz do projeto) para explicacao detalhada linha a linha.
+
+name: ETL Estoque  # nome exibido na aba Actions do Github, so um rotulo
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch: {}  # habilita o botao "Run workflow" manual na aba Actions do Github
   schedule:
-    - cron: "0 9 * * *"  # 09:00 UTC = 06:00 -03
+    # cron roda sempre em UTC. "0 9 * * *" = todo dia as 09:00 UTC (06:00 -03)
+    # obs: repo sem push ha ~60 dias tem o schedule pausado automaticamente pelo GitHub
+    - cron: "0 9 * * *"
 
 jobs:
   run-etl:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # VM efemera: nasce vazia, e destruida no final da execucao
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4  # clona o repo dentro da VM
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5  # instala o Python na VM
         with:
           python-version: "3.12"
 
-      - run: pip install -r requirements.txt
+      - run: pip install -r requirements.txt  # instala as dependencias do projeto
 
-      - run: python etl_estoque.py
+      - run: python etl_estoque.py  # roda o ETL de verdade
         env:
+          # injeta o secret so nesse processo; GitHub mascara o valor nos logs
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
