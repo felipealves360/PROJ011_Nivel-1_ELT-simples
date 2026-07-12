@@ -221,7 +221,7 @@
   <div class="step">
     <div class="step-head"><div class="num">5</div>
       <div><h2>Agendar com GitHub Actions (cron)</h2><p class="sub">O "orquestrador" do Nível 1 — sem Airflow, sem Dagster.</p></div>
-      <span class="tag">~1–2h</span>
+      <span class="tag">✅ Concluído</span>
     </div>
     <div class="body">
       <p>Aqui está o coração do aprendizado de <b>deploy</b> deste nível: um workflow que instala as deps e roda o ETL num horário fixo, na infraestrutura do GitHub.</p>
@@ -233,6 +233,14 @@
         <li>Disparar manualmente pela aba <b>Actions</b> e ler os logs.</li>
       </ul>
       <div class="warn">⚠️ Lembrete: cron do GitHub Actions roda em <b>UTC</b>. Ajuste o horário considerando seu fuso (-03).</div>
+      <div class="lbl">O que aconteceu na prática</div>
+      <ul>
+        <li>Secret <code>SUPABASE_URL</code> cadastrado em Settings → Secrets and variables → Actions.</li>
+        <li><b>1ª tentativa (erro):</b> <code>sqlalchemy.exc.ArgumentError: Could not parse SQLAlchemy URL</code> — o valor colado no secret estava malformado (provável prefixo/aspas/espaço extra). Corrigido recadastrando só a URI pura.</li>
+        <li><b>2ª tentativa (erro):</b> <code>psycopg2.OperationalError: Network is unreachable</code> ao conectar em endereço IPv6 — runners do GitHub Actions não têm saída IPv6, e a <b>conexão direta</b> do Supabase (<code>db.xxx.supabase.co:5432</code>) resolve para IPv6. Funcionava local só porque a rede local tem IPv6.</li>
+        <li><b>Correção:</b> trocado o connect method no Supabase (Project Settings → Database → Connection string) de "Direct connection" para <b>"Session pooler"</b> (compatível com IPv4, host <code>aws-0-&lt;região&gt;.pooler.supabase.com</code>). String atualizada tanto no <code>.env</code> local quanto no secret do GitHub, para manter os dois ambientes consistentes.</li>
+        <li><b>3ª tentativa:</b> execução manual via <b>Run workflow</b> ficou verde.</li>
+      </ul>
       <div class="done"><b>Critério de pronto:</b> execução manual verde na aba Actions e os dados atualizados no Supabase.</div>
     </div>
   </div>
