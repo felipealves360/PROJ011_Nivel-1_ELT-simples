@@ -4,7 +4,7 @@ Pipeline simples de estoque: dois Excel brutos → limpeza em Python (pandas) �
 
 Dashboard no ar: https://proj011n-vel-1elt-simples-fzlriquhvbemgnfmufvkfl.streamlit.app/
 
-Contexto completo do aprendizado (o que foi feito, bugs encontrados, decisões) está em `01_panorama_nivel-1-pipeline-etapas.html` e `PROGRESSO.md`. Documentação de estudo detalhada do workflow e do dashboard está em `notas/`.
+Contexto completo do aprendizado (o que foi feito, bugs encontrados, decisões) está em `PROGRESSO.md`. Runbook de reconstrução do projeto do zero e documentação de estudo detalhada do workflow e do dashboard estão em `notas/`.
 
 ## Arquitetura
 

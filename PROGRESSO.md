@@ -1,6 +1,6 @@
 # Progresso — Nível 1 (2026-07-12) — ✅ CONCLUÍDO
 
-Nível 1 fechado: pipeline Excel → GitHub Actions → Supabase → Streamlit funcionando de ponta a ponta, na nuvem, sem passos manuais no meio. Detalhes completos de cada etapa estão em `01_panorama_nivel-1-pipeline-etapas.html` (seção "O que aconteceu na prática" de cada card) e em `README.md`.
+Nível 1 fechado: pipeline Excel → GitHub Actions → Supabase → Streamlit funcionando de ponta a ponta, na nuvem, sem passos manuais no meio. Detalhes completos de cada etapa estão neste arquivo, no runbook `notas/01_passo-a-passo_nivel-1-do-zero.html` (reconstrução do zero, com comandos e armadilhas) e em `README.md`.
 
 ## Concluído
 
@@ -37,7 +37,4 @@ Lista de limitações levantadas na Etapa 7 (ver `README.md` para a versão comp
 
 ## Instrução permanente para o professor (Claude)
 
-Ao final de cada etapa concluída (critério de pronto atingido), atualizar `01_panorama_nivel-1-pipeline-etapas.html`:
-- trocar a tag do card (`<span class="tag">`) para `✅ Concluído`;
-- adicionar/editar o bloco `<div class="lbl">O que aconteceu na prática</div>` com uma lista do que realmente foi feito, incluindo desvios do roteiro original, bugs encontrados e comandos reais usados (sem segredos).
-Esse padrão foi seguido nas Etapas 1–7 — **Nível 1 concluído**. Quando o usuário iniciar o Nível 2, criar um novo arquivo de progresso equivalente para essa fase.
+O panorama HTML de acompanhamento por etapa (`01_panorama_nivel-1-pipeline-etapas.html`) foi removido do repo na faxina de 2026-07-12 — o material de referência do Nível 1 agora é o runbook `notas/01_passo-a-passo_nivel-1-do-zero.html` (estático, não é atualizado etapa a etapa) e este próprio arquivo. Ao final de cada etapa concluída, registrar o que aconteceu na prática diretamente na seção "Concluído" deste `PROGRESSO.md` (desvios do roteiro, bugs encontrados, comandos reais usados, sem segredos). Quando o usuário iniciar o Nível 2, criar um novo arquivo de progresso equivalente para essa fase.
