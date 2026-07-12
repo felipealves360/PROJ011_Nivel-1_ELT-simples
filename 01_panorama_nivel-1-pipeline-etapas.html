@@ -250,7 +250,7 @@
   <div class="step">
     <div class="step-head"><div class="num">6</div>
       <div><h2>Dashboard em Streamlit sobre o Gold</h2><p class="sub">O consumo final — Python puro, sem front-end.</p></div>
-      <span class="tag">~2h</span>
+      <span class="tag">✅ Concluído</span>
     </div>
     <div class="body">
       <p>O Streamlit lê <b>apenas o schema Gold</b> (nunca o Silver/Bronze) e mostra os KPIs. Regra de ouro da Medalhão: dashboard consome Gold.</p>
@@ -260,6 +260,14 @@
         <li>Exibir: tabela, saldo por loja, valor de saldo por categoria (um ou dois gráficos <code>st.bar_chart</code>).</li>
         <li>Rodar local com <code>streamlit run app.py</code>.</li>
         <li>Publicar no <b>Streamlit Community Cloud</b> (grátis), apontando para o repo e configurando o secret <code>SUPABASE_URL</code>.</li>
+      </ul>
+      <div class="lbl">O que aconteceu na prática</div>
+      <ul>
+        <li><code>app.py</code> criado com <code>@st.cache_data(ttl=600)</code> pra evitar reconsultar o Supabase a cada rerun do Streamlit; 3 KPIs (<code>st.metric</code>), 2 gráficos (<code>st.bar_chart</code> por loja e por categoria) e uma tabela de detalhe (<code>st.dataframe</code>).</li>
+        <li>Testado localmente com <code>streamlit run app.py</code> e validado visualmente via browser antes do deploy.</li>
+        <li><code>requirements.txt</code> regenerado com <code>pip freeze</code> incluindo <code>streamlit</code> — aproveitado pra corrigir a codificação do arquivo, que estava em UTF-16 (efeito colateral do <code>Out-File</code> do PowerShell) e passou a UTF-8.</li>
+        <li>Deploy no <b>Streamlit Community Cloud</b> via login GitHub, apontando pro repo + <code>app.py</code>, com o secret <code>SUPABASE_URL</code> cadastrado em formato TOML usando a mesma connection string via <b>session pooler</b> (mesmo motivo do IPv6 na Etapa 5).</li>
+        <li>App no ar: <a href="https://proj011n-vel-1elt-simples-fzlriquhvbemgnfmufvkfl.streamlit.app/" target="_blank" rel="noopener">proj011n-vel-1elt-simples-fzlriquhvbemgnfmufvkfl.streamlit.app</a></li>
       </ul>
       <div class="done"><b>Critério de pronto:</b> URL pública do Streamlit mostrando os KPIs vindos do Gold.</div>
     </div>
