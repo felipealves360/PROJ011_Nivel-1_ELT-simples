@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de Stack — Deploy de Pipeline de Dados</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --card2:#1d2029; --line:#2a2e3a;
+    --tx:#e7e9ee; --mut:#9aa3b2; --acc:#5e9bff;
+    --bronze:#b87333; --silver:#9fb3c8; --gold:#e3b341;
+    --n1:#3ba776; --n2:#4f8cff; --n3:#a05eff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:linear-gradient(180deg,#0c0e12,#0f1115);
+    color:var(--tx); font:16px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    padding:0 0 80px;
+  }
+  header{
+    padding:56px 24px 40px; text-align:center;
+    border-bottom:1px solid var(--line);
+    background:radial-gradient(1200px 400px at 50% -100px,rgba(79,140,255,.15),transparent);
+  }
+  header h1{margin:0 0 10px; font-size:30px; letter-spacing:-.5px}
+  header p{margin:0 auto; max-width:680px; color:var(--mut)}
+  .wrap{max-width:960px; margin:0 auto; padding:0 24px}
+  .goal{
+    margin:32px auto; padding:18px 22px; background:var(--card);
+    border:1px solid var(--line); border-radius:12px; display:flex; gap:16px; align-items:center;
+    flex-wrap:wrap; justify-content:center; color:var(--mut); font-size:15px;
+  }
+  .goal b{color:var(--tx)}
+  .arrow{color:var(--acc); font-weight:700}
+
+  .level{
+    margin:28px 0; background:var(--card); border:1px solid var(--line);
+    border-radius:16px; overflow:hidden;
+  }
+  .level-head{padding:22px 26px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:16px}
+  .badge{
+    width:46px; height:46px; border-radius:12px; display:grid; place-items:center;
+    font-size:22px; font-weight:800; flex:none;
+  }
+  .l1 .badge{background:rgba(59,167,118,.15); color:var(--n1); border:1px solid rgba(59,167,118,.4)}
+  .l2 .badge{background:rgba(79,140,255,.15); color:var(--n2); border:1px solid rgba(79,140,255,.4)}
+  .l3 .badge{background:rgba(160,94,255,.15); color:var(--n3); border:1px solid rgba(160,94,255,.4)}
+  .level-head h2{margin:0; font-size:20px}
+  .level-head .sub{margin:2px 0 0; color:var(--mut); font-size:14px}
+  .tag{margin-left:auto; font-size:12px; padding:5px 11px; border-radius:20px; border:1px solid var(--line); color:var(--mut)}
+  .body{padding:22px 26px}
+  .objetivo{color:var(--mut); font-style:italic; margin:0 0 18px}
+
+  table{width:100%; border-collapse:collapse; margin:0 0 18px; font-size:14.5px}
+  th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{color:var(--mut); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.5px}
+  td:first-child{color:var(--mut); width:34%}
+  td b{color:var(--tx)}
+
+  .why{background:var(--card2); border-left:3px solid var(--line); padding:14px 18px; border-radius:0 10px 10px 0; font-size:14.5px; color:#cfd4de}
+  .l1 .why{border-left-color:var(--n1)}
+  .l2 .why{border-left-color:var(--n2)}
+  .l3 .why{border-left-color:var(--n3)}
+  .why b{color:var(--tx)}
+
+  .diagram{
+    margin:26px 0; padding:20px; background:#0c0e12; border:1px solid var(--line);
+    border-radius:12px; overflow-x:auto;
+  }
+  .diagram pre{margin:0; color:#8fa6c9; font:13px/1.5 "SF Mono",Consolas,monospace; white-space:pre}
+
+  h3.sec{margin:44px 0 8px; font-size:16px; color:var(--tx); border-left:3px solid var(--acc); padding-left:12px}
+  .rec{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:24px 26px; margin:14px 0}
+  .rec ol{margin:12px 0 0; padding-left:20px}
+  .rec li{margin:8px 0}
+  .rec .warn{margin-top:18px; padding:12px 16px; background:rgba(227,179,65,.08); border:1px solid rgba(227,179,65,.3); border-radius:10px; color:#e8d9a8; font-size:14px}
+
+  .flow-badges{display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 0}
+  .chip{font-size:12px; padding:5px 12px; border-radius:8px; border:1px solid var(--line); background:var(--card2)}
+  .chip.b{color:var(--bronze)} .chip.s{color:var(--silver)} .chip.g{color:var(--gold)}
+
+  footer{text-align:center; color:var(--mut); font-size:13px; margin-top:50px}
+  code{background:var(--card2); padding:2px 6px; border-radius:5px; font-size:13px; color:#d6b6ff}
+</style>
+</head>
+<body>
+<header>
+  <h1>Plano de Stack — Deploy de Pipeline de Dados</h1>
+  <p>Três níveis de evolução, do mais simples ao mais eficiente, para dominar deploy de pipelines na arquitetura Medalhão — de planilhas hoje a extração de ERP e dashboard sobre o Gold.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="goal">
+    <span><b>Planilhas / ERP</b></span><span class="arrow">→</span>
+    <span><b>Bronze</b></span><span class="arrow">→</span>
+    <span><b>Silver</b></span><span class="arrow">→</span>
+    <span><b>Gold</b></span><span class="arrow">→</span>
+    <span><b>Dashboard / App</b></span>
+  </div>
+
+  <!-- NÍVEL 1 -->
+  <section class="level l1">
+    <div class="level-head">
+      <div class="badge">1</div>
+      <div>
+        <h2>Simples — foco em aprender o ciclo completo</h2>
+        <p class="sub">Ponta a ponta na nuvem o mais rápido possível, sem se afogar em ferramentas.</p>
+      </div>
+      <span class="tag">🥉 Base</span>
+    </div>
+    <div class="body">
+      <p class="objetivo">Objetivo: dominar deploy, agendamento e o consumo do Gold com o mínimo de peças móveis.</p>
+      <table>
+        <tr><th>Camada</th><th>Tecnologia</th></tr>
+        <tr><td>Extração</td><td><b>Python + pandas</b> — Excel hoje; <code>requests</code> p/ API do ERP depois</td></tr>
+        <tr><td>Transformação</td><td><b>pandas</b> (o que você já tem)</td></tr>
+        <tr><td>Armazenamento</td><td><b>Supabase (Postgres)</b> — Bronze / Silver / Gold em schemas</td></tr>
+        <tr><td>Orquestração</td><td><b>GitHub Actions (cron)</b> — sem Airflow/Dagster ainda</td></tr>
+        <tr><td>Deploy</td><td>Railway ou o próprio GitHub Actions</td></tr>
+        <tr><td>Dashboard</td><td><b>Streamlit</b> lendo o schema Gold</td></tr>
+      </table>
+      <div class="why"><b>Por quê:</b> elimina o orquestrador dedicado e usa um cron do GitHub Actions. Streamlit entrega um dashboard funcional em Python puro em poucas horas. É o caminho mais rápido para ter <b>tudo rodando na nuvem de ponta a ponta</b>.</div>
+    </div>
+  </section>
+
+  <!-- NÍVEL 2 -->
+  <section class="level l2">
+    <div class="level-head">
+      <div class="badge">2</div>
+      <div>
+        <h2>Intermediário (revisado) — dbt + Dagster</h2>
+        <p class="sub">Orquestração baseada em <i>assets</i> + transformação versionada e testável.</p>
+      </div>
+      <span class="tag">🥈 Padrão de mercado</span>
+    </div>
+    <div class="body">
+      <p class="objetivo">Objetivo: orquestração de verdade orientada a ativos de dados, com transformação declarativa, testada e documentada.</p>
+      <table>
+        <tr><th>Camada</th><th>Tecnologia</th></tr>
+        <tr><td>Extração</td><td>Python + <b>conectores do ERP</b> (API REST, ou <code>pyodbc</code>/SQLAlchemy se for SQL Server/Oracle)</td></tr>
+        <tr><td>Ingestão Bronze</td><td>Python → Postgres (raw), encapsulado como <b>asset Dagster</b></td></tr>
+        <tr><td>Transformação Silver/Gold</td><td><b>dbt</b> — cada modelo vira um asset via <code>@dbt_assets</code></td></tr>
+        <tr><td>Armazenamento</td><td>Supabase / Postgres</td></tr>
+        <tr><td>Orquestração</td><td><b>Dagster</b> (Docker) — schedules + sensors</td></tr>
+        <tr><td>Deploy</td><td>Docker + Railway (ou VM)</td></tr>
+        <tr><td>Dashboard</td><td><b>Metabase</b> ou <b>Streamlit</b> sobre o Gold</td></tr>
+      </table>
+
+      <div class="why">
+        <b>Por que Dagster no lugar do Airflow:</b>
+        <ul style="margin:8px 0 0; padding-left:18px">
+          <li><b>Assets, não tarefas:</b> você declara <code>bronze → silver → gold</code> como ativos de dados; o lineage aparece sozinho na UI — casa com a arquitetura Medalhão.</li>
+          <li><b>Integração nativa com dbt:</b> carrega o projeto dbt e transforma cada modelo em asset automaticamente (no Airflow exige plugin/wrapper).</li>
+          <li><b>DX melhor:</b> roda local com <code>dagster dev</code> (um comando), sem webserver + scheduler + banco de metadados separados.</li>
+          <li><b>Observabilidade:</b> materializações, logs e checks de qualidade por asset já vêm na interface.</li>
+        </ul>
+        <div style="margin-top:10px; color:var(--mut)"><b>Único custo:</b> comunidade menor que a do Airflow — menos respostas prontas no Google, mas documentação oficial excelente.</div>
+      </div>
+
+      <div class="diagram">
+<pre>┌─────────────────────────────────────────────────┐
+│                    Dagster                      │
+│                                                 │
+│   @asset             @dbt_assets                │
+│   extrai_erp   ──►    bronze ─► silver ─► gold  │
+│   (Python)            (dbt)     (dbt)     (dbt) │
+│                                                 │
+│   Schedule: cron diário   │   Sensor: novo arq. │
+└─────────────────────────────────────────────────┘
+                     │
+                     ▼
+             Postgres / Supabase
+                     │
+                     ▼
+           Metabase / Streamlit  (Gold)</pre>
+      </div>
+      <div class="flow-badges">
+        <span class="chip b">● Bronze — raw</span>
+        <span class="chip s">● Silver — limpo</span>
+        <span class="chip g">● Gold — KPI agregado</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- NÍVEL 3 -->
+  <section class="level l3">
+    <div class="level-head">
+      <div class="badge">3</div>
+      <div>
+        <h2>Eficiente / moderno — padrão de mercado atual</h2>
+        <p class="sub">Extração declarativa e orquestração assíncrona que escala.</p>
+      </div>
+      <span class="tag">🥇 Escala</span>
+    </div>
+    <div class="body">
+      <p class="objetivo">Objetivo: stack que escala, com extração de conectores prontos e destino em warehouse quando crescer.</p>
+      <table>
+        <tr><th>Camada</th><th>Tecnologia</th></tr>
+        <tr><td>Extração / Ingestão</td><td><b>dlt</b> (data load tool) ou <b>Airbyte</b> — conectores prontos p/ ERPs e APIs</td></tr>
+        <tr><td>Armazenamento</td><td>Postgres/Supabase agora; <b>DuckDB</b> local p/ dev; <b>BigQuery</b> se crescer</td></tr>
+        <tr><td>Transformação</td><td><b>dbt</b> (Silver / Gold)</td></tr>
+        <tr><td>Orquestração</td><td><b>Dagster</b> (asset-based) — schedules + sensors</td></tr>
+        <tr><td>Deploy</td><td>Docker + Railway/Fly.io, ou Dagster Cloud</td></tr>
+        <tr><td>Dashboard / App</td><td><b>Next.js + API</b> consumindo o Gold, ou <b>Evidence.dev</b> (BI como código)</td></tr>
+      </table>
+      <div class="why"><b>Por quê:</b> <code>dlt</code>/Airbyte resolvem o problema real de extrair de ERP sem escrever conector do zero. Dagster + dbt já vêm do Nível 2 — a diferença aqui é a <b>camada de extração</b> (conector manual → dlt/Airbyte) e o <b>destino</b> (Postgres → warehouse). Isso cria um caminho de evolução limpo, sem retrabalho de orquestração.</div>
+    </div>
+  </section>
+
+  <!-- RECOMENDAÇÃO -->
+  <h3 class="sec">Recomendação para o seu momento</h3>
+  <div class="rec">
+    <p>Como o objetivo é <b>aprender deploy</b>, comece pelo <b>Nível 1</b> para fechar o ciclo completo (extração → nuvem → dashboard) rápido. Depois evolua para o <b>Nível 2</b> trocando duas peças de cada vez:</p>
+    <ol>
+      <li>Adicione <b>dbt</b> para Silver/Gold (maior retorno de aprendizado);</li>
+      <li>Plugue <b>Streamlit ou Metabase</b> no Gold;</li>
+      <li>Só então troque a fonte Excel pela <b>API do ERP</b>;</li>
+      <li>Introduza o <b>Dagster</b> quando o pipeline já estiver estável.</li>
+    </ol>
+    <div class="warn">⚠️ Erro comum: começar pelo orquestrador. Dagster/Airflow são orquestradores, não o coração do pipeline. O coração é <b>extração confiável + transformação testada (dbt) + Gold bem modelado</b>.</div>
+  </div>
+
+  <footer>
+    PROJ011 — Airflow Pipeline Test · Plano de stack gerado em 2026-07-06
+  </footer>
+
+</div>
+</body>
+</html>
